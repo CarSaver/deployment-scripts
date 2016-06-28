@@ -1,3 +1,7 @@
+dependencies:
+  override:
+    - sudo pip install awscli
+
 deployment:
   production:
     branch: master
