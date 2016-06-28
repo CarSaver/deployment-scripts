@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-BUCKET=deployment-scripts
+BUCKET=carsaver-deployment-scripts
 DIR=scripts/
 aws s3 sync $DIR s3://$BUCKET/
