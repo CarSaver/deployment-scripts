@@ -1,7 +1,3 @@
-dependencies:
-  override:
-    - sudo pip install awscli
-
 deployment:
   aws:
     branch: master
