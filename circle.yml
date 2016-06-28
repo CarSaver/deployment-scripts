@@ -1,5 +1,5 @@
 deployment:
-  aws:
+  production:
     branch: master
     commands:
       - ./publish.sh
