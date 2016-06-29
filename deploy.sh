@@ -13,8 +13,10 @@ ECS_TASK_TEMPLATE=$(<ecs_template.json)
 
 ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template.json"}
 
+ECS_TASK_TEMPLATE="${ECS_TASK_TEMPLATE//\"/\\\"}"
+
 make_task_def() {
-	task_def=$(printf "$ECS_TASK_TEMPLATE" $ECS_TASK_DEFINITION $AWS_ACCOUNT_ID $AWS_DEFAULT_REGION $ECR_REPO_NAME $CIRCLE_SHA1 $SENDGRID_API_KEY $APP_ENVIRONMENT $ECS_SERVICE $AWS_DEFAULT_REGION)
+	task_def="$(eval echo $ECS_TASK_TEMPLATE)"
 }
 
 # more bash-friendly output for jq

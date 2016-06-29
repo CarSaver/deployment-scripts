@@ -1,7 +1,7 @@
 [
     {
-        "name": "%s",
-        "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
+        "name": "${ECS_TASK_DEFINITION}",
+        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:${CIRCLE_SHA1}",
         "essential": true,
         "memory": 1024,
         "cpu": 10,
@@ -14,14 +14,14 @@
         "environment": [
             {
                 "name": "APP_ENVIRONMENT",
-                "value": "%s"
+                "value": "${APP_ENVIRONMENT}"
             }
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "/ecs/services/%s",
-                "awslogs-region": "%s"
+                "awslogs-group": "/ecs/services/${ECS_SERVICE}",
+                "awslogs-region": "${AWS_DEFAULT_REGION}"
             }
         }
     }
