@@ -4,6 +4,10 @@ Common deployment scripts for CarSaver deployments.
 
 ## Deploying to ECS from CircleCI
 
+### ECS Task Definition Template
+
+Your project will need a file called `ecs_template.json` that will outline what the task definition will be for your project.  [ecs_template.example.json](ecs_template.example.json) is an example you can look at to start.
+
 ### CircleCI Setup
 
 1. You need to make sure the AWS Permissions have been set for the CircleCI Project.
