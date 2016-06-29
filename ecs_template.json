@@ -1,0 +1,28 @@
+[
+    {
+        "name": "%s",
+        "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
+        "essential": true,
+        "memory": 1024,
+        "cpu": 10,
+        "portMappings": [
+            {
+                "containerPort": 8080,
+                "hostPort": 8080
+            }
+        ],
+        "environment": [
+            {
+                "name": "APP_ENVIRONMENT",
+                "value": "%s"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/services/%s",
+                "awslogs-region": "%s"
+            }
+        }
+    }
+]

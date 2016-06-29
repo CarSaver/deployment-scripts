@@ -9,38 +9,9 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 APP_ENVIRONMENT=${APP_ENVIRONMENT?"Need to set APP_ENVIRONMENT"}
 
 # Task Definition Template
-ECS_TASK_TEMPLATE='[
-    {
-        "name": "%s",
-        "image": "%s.dkr.ecr.%s.amazonaws.com/%s:%s",
-        "essential": true,
-        "memory": 1024,
-        "cpu": 10,
-        "portMappings": [
-            {
-                "containerPort": 8080,
-                "hostPort": 8080
-            }
-        ],
-        "environment": [
-            {
-                "name": "SENDGRID_API_KEY",
-                "value": "%s"
-            },
-            {
-                "name": "APP_ENVIRONMENT",
-                "value": "%s"
-            }
-        ],
-        "logConfiguration": {
-            "logDriver": "awslogs",
-            "options": {
-                "awslogs-group": "/ecs/services/%s",
-                "awslogs-region": "%s"
-            }
-        }
-    }
-]'
+ECS_TASK_TEMPLATE=$(<ecs_template.json)
+
+ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template.json"}
 
 make_task_def() {
 	task_def=$(printf "$ECS_TASK_TEMPLATE" $ECS_TASK_DEFINITION $AWS_ACCOUNT_ID $AWS_DEFAULT_REGION $ECR_REPO_NAME $CIRCLE_SHA1 $SENDGRID_API_KEY $APP_ENVIRONMENT $ECS_SERVICE $AWS_DEFAULT_REGION)
