@@ -54,7 +54,7 @@ deploy_cluster() {
 }
 
 push_ecr_image() {
-	eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+	eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$CIRCLE_SHA1
 }
 
