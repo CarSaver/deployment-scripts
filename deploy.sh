@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Check variables are set
 AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION?"Need to set AWS_DEFAULT_REGION"}
 ECS_CLUSTER=${ECS_CLUSTER?"Need to set ECS_CLUSTER"}
