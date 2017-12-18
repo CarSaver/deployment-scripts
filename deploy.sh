@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Check variables are set
 AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION?"Need to set AWS_DEFAULT_REGION"}
 ECS_CLUSTER=${ECS_CLUSTER?"Need to set ECS_CLUSTER"}
@@ -34,6 +36,8 @@ deploy_cluster() {
         return 1
     fi
 
+		curl https://notify.bugsnag.com/deploy -X POST -d "apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\"${CIRCLE_BRANCH}\""
+
     # wait for older revisions to disappear
     # not really necessary, but nice for demos
     for attempt in {1..60}; do
@@ -52,7 +56,7 @@ deploy_cluster() {
 }
 
 push_ecr_image() {
-	eval $(aws ecr get-login --region $AWS_DEFAULT_REGION | sed 's/ -e none//g')
+	eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$CIRCLE_SHA1
 }
 
