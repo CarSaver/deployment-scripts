@@ -63,7 +63,7 @@ notify_bugsnag() {
 }
 
 push_ecr_image() {
-	eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+	eval $(aws ecr get-login --region $AWS_DEFAULT_REGION | sed 's/ -e none//g')
 	docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$CIRCLE_SHA1
 }
 
