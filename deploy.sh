@@ -38,7 +38,9 @@ deploy_cluster() {
     fi
 
 		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
-		eval ${$bugsnag_notifier}
+		echo $bugsnag_notifier
+		eval $bugsnag_notifier
+		echo ""
 
     # wait for older revisions to disappear
     # not really necessary, but nice for demos
