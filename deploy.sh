@@ -6,6 +6,7 @@ ECS_CLUSTER=${ECS_CLUSTER?"Need to set ECS_CLUSTER"}
 ECS_SERVICE=${ECS_SERVICE?"Need to set ECS_SERVICE"}
 ECS_TASK_DEFINITION=${ECS_TASK_DEFINITION?"Need to set ECS_TASK_DEFINITION"}
 ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
+BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 
 # Task Definition Template
 ECS_TASK_TEMPLATE=$(<ecs_template.json)
@@ -36,7 +37,8 @@ deploy_cluster() {
         return 1
     fi
 
-		curl https://notify.bugsnag.com/deploy -X POST -d "apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\"${CIRCLE_BRANCH}\""
+		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
+		eval bugsnag_notifier
 
     # wait for older revisions to disappear
     # not really necessary, but nice for demos
