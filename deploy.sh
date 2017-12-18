@@ -31,16 +31,12 @@ configure_aws_cli() {
 deploy_cluster() {
     make_task_def
     register_definition
+		notify_bugsnag
     if [[ $(aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $revision | \
                    $JQ '.service.taskDefinition') != $revision ]]; then
         echo "Error updating lead service."
         return 1
     fi
-
-		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
-		echo $bugsnag_notifier
-		eval $bugsnag_notifier
-		echo ""
 
     # wait for older revisions to disappear
     # not really necessary, but nice for demos
@@ -57,6 +53,13 @@ deploy_cluster() {
     done
     echo "Service update took too long."
     return 1
+}
+
+notify_bugsnag() {
+	bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
+	echo $bugsnag_notifier
+	eval $bugsnag_notifier
+	echo ""
 }
 
 push_ecr_image() {
