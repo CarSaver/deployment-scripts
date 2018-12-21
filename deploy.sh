@@ -8,19 +8,21 @@ ECS_TASK_DEFINITION=${ECS_TASK_DEFINITION?"Need to set ECS_TASK_DEFINITION"}
 ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 
-# Task Definition Template
-ECS_TASK_TEMPLATE=$(<ecs_template.json)
+# more bash-friendly output for jq
+JQ="jq --raw-output --exit-status"
 
-ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template.json"}
+# Task Definition Template
+curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/master/ecs_template.base.json" > ecs_template.base.json
+$JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
+ECS_TASK_TEMPLATE=$(<ecs_template_new.json)
+
+ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template_new.json"}
 
 ECS_TASK_TEMPLATE="${ECS_TASK_TEMPLATE//\"/\\\"}"
 
 make_task_def() {
 	task_def="$(eval echo $ECS_TASK_TEMPLATE)"
 }
-
-# more bash-friendly output for jq
-JQ="jq --raw-output --exit-status"
 
 configure_aws_cli() {
 	aws --version

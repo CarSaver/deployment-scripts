@@ -3,25 +3,29 @@
         "name": "${ECS_TASK_DEFINITION}",
         "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:${CIRCLE_SHA1}",
         "essential": true,
-        "memory": 1024,
+        "memoryReservation": 1024,
         "cpu": 10,
         "portMappings": [
             {
                 "containerPort": 8080,
-                "hostPort": 8080
+                "hostPort": 0
             }
         ],
         "environment": [
-            {
-                "name": "APP_ENVIRONMENT",
-                "value": "${APP_ENVIRONMENT}"
-            }
+          {
+              "name": "SPRING_PROFILES_ACTIVE",
+              "value": "${SPRING_PROFILES_ACTIVE},json-logger"
+          },
+          {
+              "name": "AWS_ECS_CLUSTER",
+              "value": "${ECS_CLUSTER}"
+          }
         ],
         "logConfiguration": {
-            "logDriver": "awslogs",
+            "logDriver": "json-file",
             "options": {
-                "awslogs-group": "/ecs/services/${ECS_SERVICE}",
-                "awslogs-region": "${AWS_DEFAULT_REGION}"
+                "max-size": "100m",
+                "max-file": "2"
             }
         }
     }
