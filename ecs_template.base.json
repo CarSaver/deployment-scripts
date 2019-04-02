@@ -4,6 +4,7 @@
         "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:${CIRCLE_SHA1}",
         "essential": true,
         "memoryReservation": 1024,
+        "taskRoleArn": "arn:aws:iam::909837171498:role/java-service",
         "cpu": 128,
         "portMappings": [
             {
