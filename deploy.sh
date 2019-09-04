@@ -58,7 +58,7 @@ deploy_cluster() {
 }
 
 notify_bugsnag() {
-	if [ "$SPRING_PROFILES_ACTIVE" -eq "prod" ]; then BUGSNAG_RELEASE_STAGE="production"; else BUGSNAG_RELEASE_STAGE="$SPRING_PROFILES_ACTIVE"; fi
+	BUGSNAG_RELEASE_STAGE=$([ "$SPRING_PROFILES_ACTIVE" == "prod" ] && echo "production" || echo "$SPRING_PROFILES_ACTIVE")
 
 	bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${BUGSNAG_RELEASE_STAGE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
 	echo $bugsnag_notifier
