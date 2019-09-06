@@ -19,6 +19,10 @@
           {
               "name": "AWS_ECS_CLUSTER",
               "value": "${ECS_CLUSTER}"
+          },
+          {
+              "name": "DD_TRACE_ANALYTICS_ENABLED",
+              "value": "${DD_TRACE_ANALYTICS_ENABLED}"
           }
         ],
         "logConfiguration": {
