@@ -58,9 +58,14 @@ deploy_cluster() {
 }
 
 notify_bugsnag() {
-	bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
-	echo $bugsnag_notifier
-	eval $bugsnag_notifier
+	IFS=','
+	read -ra API_KEYS <<< "$BUGSNAG_API_KEY"
+	for API_KEY in "${API_KEYS[@]}"; do
+		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
+		echo $bugsnag_notifier
+		eval $bugsnag_notifier
+	done
+	IFS=' '
 	echo ""
 }
 
