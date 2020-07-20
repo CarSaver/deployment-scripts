@@ -61,9 +61,14 @@ deploy_cluster() {
 notify_bugsnag() {
 	BUGSNAG_RELEASE_STAGE=$([ "$SPRING_PROFILES_ACTIVE" == "prod" ] && echo "production" || echo "$SPRING_PROFILES_ACTIVE")
 
-	bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${BUGSNAG_RELEASE_STAGE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
-	echo $bugsnag_notifier
-	eval $bugsnag_notifier
+	IFS=',' # Set delimiter to comma
+	read -ra API_KEYS <<< "$BUGSNAG_API_KEY"
+	for API_KEY in "${API_KEYS[@]}"; do
+		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${API_KEY}&releaseStage=${BUGSNAG_RELEASE_STAGE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
+		echo $bugsnag_notifier
+		eval $bugsnag_notifier
+	done
+	IFS=' ' # Set delimiter back to default
 	echo ""
 }
 
