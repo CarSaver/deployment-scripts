@@ -37,7 +37,7 @@ deploy_cluster() {
 		notify_bugsnag
     if [[ $(aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $revision | \
                    $JQ '.service.taskDefinition') != $revision ]]; then
-        echo "Error updating lead service."
+        echo "Error updating service."
         return 1
     fi
 
