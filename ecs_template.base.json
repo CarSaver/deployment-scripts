@@ -27,6 +27,10 @@
           {
               "name": "DD_LOGS_INJECTION",
               "value": "${DD_LOGS_INJECTION}"
+          },
+          {
+            "name": "DD_TRACE_ENABLED",
+            "value": "${DD_TRACE_ANALYTICS_ENABLED}"
           }
         ],
         "logConfiguration": {
