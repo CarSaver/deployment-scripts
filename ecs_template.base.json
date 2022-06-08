@@ -14,7 +14,7 @@
     "environment": [
       {
         "name": "SPRING_PROFILES_ACTIVE",
-        "value": "${SPRING_PROFILES_ACTIVE},json-logger"
+        "value": "${SPRING_PROFILES_ACTIVE},cloud,json-logger"
       },
       {
         "name": "CARSAVER_DEPLOYMENT_ENVIRONMENT",
