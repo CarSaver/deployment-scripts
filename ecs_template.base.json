@@ -1,44 +1,48 @@
 [
-    {
-        "name": "${ECS_TASK_DEFINITION}",
-        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:${CIRCLE_SHA1}",
-        "essential": true,
-        "memoryReservation": 1024,
-        "cpu": 128,
-        "portMappings": [
-            {
-                "containerPort": 8080,
-                "hostPort": 0
-            }
-        ],
-        "environment": [
-          {
-              "name": "SPRING_PROFILES_ACTIVE",
-              "value": "${SPRING_PROFILES_ACTIVE},json-logger"
-          },
-          {
-              "name": "AWS_ECS_CLUSTER",
-              "value": "${ECS_CLUSTER}"
-          },
-          {
-              "name": "DD_TRACE_ANALYTICS_ENABLED",
-              "value": "${DD_TRACE_ANALYTICS_ENABLED}"
-          },
-          {
-              "name": "DD_LOGS_INJECTION",
-              "value": "${DD_LOGS_INJECTION}"
-          },
-          {
-            "name": "DD_TRACE_ENABLED",
-            "value": "${DD_TRACE_ANALYTICS_ENABLED}"
-          }
-        ],
-        "logConfiguration": {
-            "logDriver": "json-file",
-            "options": {
-                "max-size": "100m",
-                "max-file": "2"
-            }
-        }
+  {
+    "name": "${ECS_TASK_DEFINITION}",
+    "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:${CIRCLE_SHA1}",
+    "essential": true,
+    "memoryReservation": 1024,
+    "cpu": 128,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 0
+      }
+    ],
+    "environment": [
+      {
+        "name": "SPRING_PROFILES_ACTIVE",
+        "value": "${SPRING_PROFILES_ACTIVE},json-logger"
+      },
+      {
+        "name": "CARSAVER_DEPLOYMENT_ENVIRONMENT",
+        "value": "${SPRING_PROFILES_ACTIVE}"
+      },
+      {
+        "name": "AWS_ECS_CLUSTER",
+        "value": "${ECS_CLUSTER}"
+      },
+      {
+        "name": "DD_TRACE_ANALYTICS_ENABLED",
+        "value": "${DD_TRACE_ANALYTICS_ENABLED}"
+      },
+      {
+        "name": "DD_LOGS_INJECTION",
+        "value": "${DD_LOGS_INJECTION}"
+      },
+      {
+        "name": "DD_TRACE_ENABLED",
+        "value": "${DD_TRACE_ANALYTICS_ENABLED}"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "json-file",
+      "options": {
+        "max-size": "100m",
+        "max-file": "2"
+      }
     }
+  }
 ]
