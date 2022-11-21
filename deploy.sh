@@ -9,6 +9,7 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 DD_TRACE_ANALYTICS_ENABLED=${DD_TRACE_ANALYTICS_ENABLED:-false}
 DD_LOGS_INJECTION=${DD_LOGS_INJECTION:-false}
+ECS_TASK_MEMORY=${ECS_TASK_MEMORY|tonumber}
 
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
