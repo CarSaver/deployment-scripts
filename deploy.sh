@@ -9,15 +9,16 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 DD_TRACE_ANALYTICS_ENABLED=${DD_TRACE_ANALYTICS_ENABLED:-false}
 DD_LOGS_INJECTION=${DD_LOGS_INJECTION:-false}
-int ECS_TASK_MEM = $((ECS_TASK_MEMORY))
-ECS_TASK_MEMORY = ECS_TASK_MEM
+# int ECS_TASK_MEM = $((ECS_TASK_MEMORY))
+# ECS_TASK_MEMORY = ECS_TASK_MEM
 
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
 
 # Task Definition Template
 curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/v4.0/ecs_template.base.json" > ecs_template.base.json
-$JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
+$JQ --argjson ECS_TASK_MEMORY "${ECS_TASK_MEM}" '.memoryReservation=$ECS_TASK_MEMORY' ecs_template.base.json > ecs_template_base.json
+$JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template_base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
 ECS_TASK_TEMPLATE=$(<ecs_template_new.json)
 
 ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template_new.json"}
