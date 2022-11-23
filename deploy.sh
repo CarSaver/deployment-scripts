@@ -18,12 +18,12 @@ JQ="jq --raw-output --exit-status"
 # Task Definition Template
 curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/v3.1/ecs_template.base.json" > ecs_template.base.json
 $JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
-jq '.[0] += {"memoryReservation":'$ECS_TASK_MEMORY'}' ecs_template_new.json > ecs_template_new.json
+jq '.[0] += {"memoryReservation":'$ECS_TASK_MEMORY'}' ecs_template_new.json > ecs_task_template.json
 
-ECS_TASK_TEMPLATE=$(<ecs_template_new.json) 
+ECS_TASK_TEMPLATE=$(<ecs_task_template.json) 
 
 
-ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template_new.json"}
+ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_task_template.json"}
 
 ECS_TASK_TEMPLATE="${ECS_TASK_TEMPLATE//\"/\\\"}"
 
