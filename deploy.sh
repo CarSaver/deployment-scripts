@@ -9,6 +9,8 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 DD_TRACE_ANALYTICS_ENABLED=${DD_TRACE_ANALYTICS_ENABLED:-false}
 DD_LOGS_INJECTION=${DD_LOGS_INJECTION:-false}
+ECS_TASK_MEMORY=${ECS_TASK_MEMORY}
+
 
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
@@ -16,7 +18,10 @@ JQ="jq --raw-output --exit-status"
 # Task Definition Template
 curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/v3.0/ecs_template.base.json" > ecs_template.base.json
 $JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
+
+
 ECS_TASK_TEMPLATE=$(<ecs_template_new.json)
+
 
 ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template_new.json"}
 
@@ -80,7 +85,7 @@ push_ecr_image() {
 
 register_definition() {
 
-    if revision=$(aws ecs register-task-definition --container-definitions "$task_def" --family $ECS_TASK_DEFINITION | $JQ '.taskDefinition.taskDefinitionArn'); then
+    if revision=$(aws ecs register-task-definition --container-definitions "$task_def" --memoryReservation $ECS_TASK_MEMORY --family $ECS_TASK_DEFINITION | $JQ '.taskDefinition.taskDefinitionArn'); then
         echo "Revision: $revision"
     else
         echo "Failed to register task definition"
