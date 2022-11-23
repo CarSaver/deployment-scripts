@@ -18,9 +18,9 @@ JQ="jq --raw-output --exit-status"
 # Task Definition Template
 curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/v3.1/ecs_template.base.json" > ecs_template.base.json
 $JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
+jq '.[0] += {"memoryReservation":'$ECS_TASK_MEMORY'}' ecs_template_new.json > ecs_template_new.json
 
-
-ECS_TASK_TEMPLATE=$(<ecs_template_new.json)
+ECS_TASK_TEMPLATE=$(<ecs_template_new.json) 
 
 
 ECS_TASK_TEMPLATE=${ECS_TASK_TEMPLATE?"Unable to load ecs_template_new.json"}
@@ -85,7 +85,7 @@ push_ecr_image() {
 
 register_definition() {
 
-    if revision=$(aws ecs register-task-definition --container-definitions "$task_def" --memoryReservation $ECS_TASK_MEMORY --family $ECS_TASK_DEFINITION | $JQ '.taskDefinition.taskDefinitionArn'); then
+    if revision=$(aws ecs register-task-definition --container-definitions $task_def --family $ECS_TASK_DEFINITION | $JQ '.taskDefinition.taskDefinitionArn'); then
         echo "Revision: $revision"
     else
         echo "Failed to register task definition"
