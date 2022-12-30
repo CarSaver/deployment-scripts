@@ -37,10 +37,11 @@
       }
     ],
     "logConfiguration": {
-      "logDriver": "json-file",
+      "logDriver": "awslogs",
       "options": {
-        "max-size": "100m",
-        "max-file": "2"
+        "awslogs-group": "/ecs/${ECS_SERVICE}",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs"
       }
     }
   }
