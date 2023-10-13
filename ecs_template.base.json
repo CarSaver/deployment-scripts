@@ -35,6 +35,13 @@
         "value": "${DD_TRACE_ANALYTICS_ENABLED}"
       }
     ],
+    "ulimits": [
+      {
+          "name": "nofile",
+          "softLimit": "${ULIMITS_SOFT_LIMIT}",
+          "hardLimit": "${ULIMITS_HARD_LIMIT}"
+      }
+    ],
     "logConfiguration": {
       "logDriver": "json-file",
       "options": {
