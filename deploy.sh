@@ -9,8 +9,10 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 DD_TRACE_ANALYTICS_ENABLED=${DD_TRACE_ANALYTICS_ENABLED:-false}
 DD_LOGS_INJECTION=${DD_LOGS_INJECTION:-false}
-ECS_TASK_MEMORY=${ECS_TASK_MEMORY}
+ECS_TASK_MEMORY=${ECS_TASK_MEMORY:-1024}
 ECS_TASK_CPU=${ECS_TASK_CPU}
+ULIMITS_SOFT_LIMIT=${ULIMITS_SOFT_LIMIT:-1024}
+ULIMITS_HARD_LIMIT=${ULIMITS_HARD_LIMIT:-4096}
 
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
@@ -18,7 +20,7 @@ JQ="jq --raw-output --exit-status"
 # Task Definition Template
 curl "https://raw.githubusercontent.com/CarSaver/deployment-scripts/v4.1/ecs_template.base.json" > ecs_template.base.json
 $JQ --raw-output --exit-status -s '.[0][0] * .[1][0]' ecs_template.base.json ecs_template.json | cat <(echo '[') <(cat -) <(echo ']') > ecs_template_new.json
-jq '.[0] += {"memoryReservation":'$ECS_TASK_MEMORY', "cpu":'$ECS_TASK_CPU'}' ecs_template_new.json > ecs_task_template.json
+jq '.[0] += {"memoryReservation":'$ECS_TASK_MEMORY', "cpu":'$ECS_TASK_CPU', "ulimits":[{"name":"nofile","softLimit":'$ULIMITS_SOFT_LIMIT',"hardLimit":'$ULIMITS_HARD_LIMIT'}]}' ecs_template_new.json > ecs_task_template.json
 
 ECS_TASK_TEMPLATE=$(<ecs_task_template.json) 
 
