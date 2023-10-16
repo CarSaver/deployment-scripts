@@ -38,8 +38,8 @@
     "ulimits": [
       {
           "name": "nofile",
-          "softLimit": $ULIMITS_SOFT_LIMIT,
-          "hardLimit": $ULIMITS_HARD_LIMIT
+          "softLimit": 16384,
+          "hardLimit": 65536
       }
     ],
     "logConfiguration": {
