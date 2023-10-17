@@ -33,6 +33,14 @@
       {
         "name": "DD_TRACE_ENABLED",
         "value": "${DD_TRACE_ANALYTICS_ENABLED}"
+      },
+      {
+        "name": "DD_APM_ENABLED",
+        "value": "${DD_APM_ENABLED}"
+      },
+      {
+        "name": "DD_ENV",
+        "value": "${DD_ENV}"
       }
     ],
     "logConfiguration": {
