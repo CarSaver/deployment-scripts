@@ -9,6 +9,8 @@ ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
 BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 DD_TRACE_ANALYTICS_ENABLED=${DD_TRACE_ANALYTICS_ENABLED:-false}
 DD_LOGS_INJECTION=${DD_LOGS_INJECTION:-false}
+DD_APM_ENABLED=${DD_APM_ENABLED:-false}
+DD_ENV=${DD_ENV}
 ECS_TASK_MEMORY=${ECS_TASK_MEMORY:-1024}
 ECS_TASK_CPU=${ECS_TASK_CPU}
 ULIMITS_SOFT_LIMIT=${ULIMITS_SOFT_LIMIT:-1024}
@@ -55,7 +57,7 @@ deploy_cluster() {
                        $JQ ".services[0].deployments | .[] | select(.taskDefinition != \"$revision\") | .taskDefinition"); then
             echo "Waiting for stale deployments:"
             echo "$stale"
-            sleep 5
+            sleep 10
         else
             echo "Deployed!"
             return 0
