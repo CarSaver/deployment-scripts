@@ -6,7 +6,6 @@ ECS_CLUSTER=${ECS_CLUSTER?"Need to set ECS_CLUSTER"}
 ECS_SERVICE=${ECS_SERVICE?"Need to set ECS_SERVICE"}
 ECS_TASK_DEFINITION=${ECS_TASK_DEFINITION?"Need to set ECS_TASK_DEFINITION"}
 ECR_REPO_NAME=${ECR_REPO_NAME?"Need to set ECR_REPO_NAME"}
-BUGSNAG_API_KEY=${BUGSNAG_API_KEY?"Need to set BUGSNAG_API_KEY"}
 
 # more bash-friendly output for jq
 JQ="jq --raw-output --exit-status"
@@ -33,7 +32,6 @@ configure_aws_cli() {
 deploy_cluster() {
     make_task_def
     register_definition
-		notify_bugsnag
     if [[ $(aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $revision | \
                    $JQ '.service.taskDefinition') != $revision ]]; then
         echo "Error updating lead service."
@@ -55,18 +53,6 @@ deploy_cluster() {
     done
     echo "Service update took too long."
     return 1
-}
-
-notify_bugsnag() {
-	IFS=','
-	read -ra API_KEYS <<< "$BUGSNAG_API_KEY"
-	for API_KEY in "${API_KEYS[@]}"; do
-		bugsnag_notifier="curl https://notify.bugsnag.com/deploy -X POST -d \"apiKey=${BUGSNAG_API_KEY}&releaseStage=${SPRING_PROFILES_ACTIVE}&repository=${CIRCLE_REPOSITORY_URL}&revision=${CIRCLE_SHA1}&branch=\\\"${CIRCLE_BRANCH}\\\"\""
-		echo $bugsnag_notifier
-		eval $bugsnag_notifier
-	done
-	IFS=' '
-	echo ""
 }
 
 push_ecr_image() {
